@@ -1,0 +1,589 @@
+
+ ##for k=1##
+go atlas
+mesh space.mult = 1.0
+#x-meshing
+x.mesh loc =0.00  spac =0.001
+x.mesh loc =0.05  spac =0.001
+x.mesh loc =0.09  spac =0.0005
+x.mesh loc =0.108 spac =0.0001
+x.mesh loc =0.110 spac =0.0001
+x.mesh loc =0.120 spac =0.0005
+x.mesh loc =0.135 spac =0.001
+x.mesh loc =0.160 spac =0.001
+#y-meshing
+y.mesh loc =-0.0168 spac =0.001
+y.mesh loc =-0.0158 spac =0.001
+y.mesh loc =-0.0018 spac =0.001
+y.mesh loc =-0.0008 spac =0.001
+y.mesh loc = 0.000  spac =0.0005
+y.mesh loc = 0.010  spac =0.0005
+y.mesh loc = 0.0108 spac =0.001
+y.mesh loc = 0.0118 spac =0.001
+y.mesh loc = 0.0258 spac =0.001
+y.mesh loc = 0.0268 spac =0.001
+#For the region:
+region num = 1 x.min = 0.0 y.min= -0.027 material = Air
+region num = 2 x.min = 0.0 x.max = 0.160 y.min =-0.0008 y.max =0.0 material =sio2
+region num = 3 x.min = 0.110 x.max = 0.135 y.min =-0.0158 y.max =-0.0008 user.material =my_oxide
+region num = 4 x.min = 0.135 x.max = 0.160 y.min =-0.0158 y.max =-0.0008 material = hfo2
+region num = 5 x.min = 0.0 x.max = 0.160 y.min = 0.0 y.max = 0.01  Material = Silicon
+region num = 6 x.min = 0.0 x.max = 0.160 y.min =0.01 y.max =0.0108 material =sio2
+region num = 7 x.min = 0.110 x.max = 0.135 y.min = 0.0108 y.max =0.0258 user.material = my_oxide
+region num = 8 x.min = 0.135 x.max = 0.160 y.min =0.0108 y.max =0.0258 material =hfo2
+#For the electrode:
+electrode name = drain x.min = 0.0 x.max = 0.0 y.min = 0.0 y.max = 0.01 
+electrode name = gate1 x.min = 0.0 x.max = 0.05 y.min =-0.0018 y.max = -0.0008
+electrode name = gate1 x.min = 0.0 x.max = 0.05 y.min = 0.0108 y.max = 0.0118
+electrode name = gate x.min = 0.058 x.max = 0.108 y.min =-0.0018 y.max = -0.0008
+electrode name = gate x.min = 0.058 x.max = 0.108 y.min = 0.0108 y.max = 0.0118
+electrode name = gate2 x.min = 0.110 x.max = 0.160 y.min = -0.0168 y.max = -0.0158
+electrode name = gate2 x.min = 0.110 x.max = 0.160 y.min = 0.0258 y.max = 0.0268
+electrod name = source x.min = 0.16 x.max = 0.16 y.min = 0.0 y.max = 0.01
+#For the quantum tunneling region:
+qtregion number=1 pts.normal=3 pts.tunnel=131 x1=0.09 y1=0.0 x2=0.09 y2=0.01 x3=0.130 y3=0.010  x4=0.130 y4=0.0
+#Dopping
+doping uniform n.type conc=1e15 region=5 x.min =0.0 x.max = 0.16 y.min=0.0 y.max=0.01 
+material material=my_oxide user.group=insulator user.default=oxide permittivity=1
+#charge
+#interf qf=1e11 x.min = 0.11 x.max = 0.132 y.min =-0.0005 y.max =0.0005
+#interf qf=1e11 x.min = 0.11 x.max = 0.132 y.min =0.0095 y.max =0.0105
+#For contact:
+contact name = drain workfun=4.3 
+contact name = source workfun=5.5
+contact name = gate1 workfun=4.5
+contact name = gate workfun=4.5
+contact name = gate2 workfun=5.12
+#For the models:
+Models cvt srh fermidirac bbt.nonlocal auger conmob bgn  print temperature=300 
+#Noise(DiffusionNoise(300))
+#output
+output val.band con.band qfn qfp e.field e.mobility h.mobility 
+#medhod
+Method newton trap 
+#solve
+Solve init
+Solve Vgate1 = 0.0 Vstep = 0.04  Vfinal = 1.2 name = gate1
+Solve Vgate2 = 0.0 Vstep = -0.04 Vfinal = -1.2 name = gate2 
+Solve Vsource= 0.0
+Solve Vdrain = 0 Vstep = 0.04 Vfinal = 1.0 name = drain
+log outfile = k1.log 
+Solve Vgate = 0.0 Vstep =0.04 Vfinal =1.2  name = gate
+#Tonyplot ccs1.log
+Save outfile =k1.str
+#Tonyplot ccs1.str
+#extract init inf="ccs1.log"
+#extract name="vt1" (xintercept(maxslope(curve(abs(v."gate"),abs(i."drain")))) - abs(ave(v."drain"))/2.0)
+#extract name=" SS1" 1.0/slope(maxslope(curve(abs(v."gate"),log10(abs(i."drain")))))
+#extract name=" Ion1" max(i."drain")
+
+##for k=12##
+go atlas
+mesh space.mult = 1.0
+#x-meshing
+x.mesh loc =0.00  spac =0.001
+x.mesh loc =0.05  spac =0.001
+x.mesh loc =0.09  spac =0.0005
+x.mesh loc =0.108 spac =0.0001
+x.mesh loc =0.110 spac =0.0001
+x.mesh loc =0.120 spac =0.0005
+x.mesh loc =0.135 spac =0.001
+x.mesh loc =0.160 spac =0.001
+#y-meshing
+y.mesh loc =-0.0168 spac =0.001
+y.mesh loc =-0.0158 spac =0.001
+y.mesh loc =-0.0018 spac =0.001
+y.mesh loc =-0.0008 spac =0.001
+y.mesh loc = 0.000  spac =0.0005
+y.mesh loc = 0.010  spac =0.0005
+y.mesh loc = 0.0108 spac =0.001
+y.mesh loc = 0.0118 spac =0.001
+y.mesh loc = 0.0258 spac =0.001
+y.mesh loc = 0.0268 spac =0.001
+#For the region:
+region num = 1 x.min = 0.0 y.min= -0.027 material = Air
+region num = 2 x.min = 0.0 x.max = 0.160 y.min =-0.0008 y.max =0.0 material =sio2
+region num = 3 x.min = 0.110 x.max = 0.135 y.min =-0.0158 y.max =-0.0008 user.material =my_oxide
+region num = 4 x.min = 0.135 x.max = 0.160 y.min =-0.0158 y.max =-0.0008 material = hfo2
+region num = 5 x.min = 0.0 x.max = 0.160 y.min = 0.0 y.max = 0.01  Material = Silicon
+region num = 6 x.min = 0.0 x.max = 0.160 y.min =0.01 y.max =0.0108 material =sio2
+region num = 7 x.min = 0.110 x.max = 0.135 y.min = 0.0108 y.max =0.0258 user.material = my_oxide
+region num = 8 x.min = 0.135 x.max = 0.160 y.min =0.0108 y.max =0.0258 material =hfo2
+#For the electrode:
+electrode name = drain x.min = 0.0 x.max = 0.0 y.min = 0.0 y.max = 0.01 
+electrode name = gate1 x.min = 0.0 x.max = 0.05 y.min =-0.0018 y.max = -0.0008
+electrode name = gate1 x.min = 0.0 x.max = 0.05 y.min = 0.0108 y.max = 0.0118
+electrode name = gate x.min = 0.058 x.max = 0.108 y.min =-0.0018 y.max = -0.0008
+electrode name = gate x.min = 0.058 x.max = 0.108 y.min = 0.0108 y.max = 0.0118
+electrode name = gate2 x.min = 0.110 x.max = 0.160 y.min = -0.0168 y.max = -0.0158
+electrode name = gate2 x.min = 0.110 x.max = 0.160 y.min = 0.0258 y.max = 0.0268
+electrod name = source x.min = 0.16 x.max = 0.16 y.min = 0.0 y.max = 0.01
+#For the quantum tunneling region:
+qtregion number=1 pts.normal=3 pts.tunnel=131 x1=0.09 y1=0.0 x2=0.09 y2=0.01 x3=0.130 y3=0.010  x4=0.130 y4=0.0
+#Dopping
+doping uniform n.type conc=1e15 region=5 x.min =0.0 x.max = 0.16 y.min=0.0 y.max=0.01 
+material material=my_oxide user.group=insulator user.default=oxide permittivity=1.64
+#charge
+#interf qf=1e11 x.min = 0.11 x.max = 0.132 y.min =-0.0005 y.max =0.0005
+#interf qf=1e11 x.min = 0.11 x.max = 0.132 y.min =0.0095 y.max =0.0105
+#For contact:
+contact name = drain workfun=4.3 
+contact name = source workfun=5.5
+contact name = gate1 workfun=4.5
+contact name = gate workfun=4.5
+contact name = gate2 workfun=5.12
+#For the models:
+Models cvt srh fermidirac bbt.nonlocal auger conmob bgn  print temperature=300 
+#Noise(DiffusionNoise(300))
+#output
+output val.band con.band qfn qfp e.field e.mobility h.mobility 
+#medhod
+Method newton trap 
+#solve
+Solve init
+Solve Vgate1 = 0.0 Vstep = 0.04  Vfinal = 1.2 name = gate1
+Solve Vgate2 = 0.0 Vstep = -0.04 Vfinal = -1.2 name = gate2 
+Solve Vsource= 0.0
+Solve Vdrain = 0 Vstep = 0.04 Vfinal = 1.0 name = drain
+log outfile = k164.log 
+Solve Vgate = 0.0 Vstep =0.04 Vfinal =1.2  name = gate
+#Tonyplot ccs1.log
+Save outfile =k164.str
+
+go atlas
+mesh space.mult = 1.0
+#x-meshing
+x.mesh loc =0.00  spac =0.001
+x.mesh loc =0.05  spac =0.001
+x.mesh loc =0.09  spac =0.0005
+x.mesh loc =0.108 spac =0.0001
+x.mesh loc =0.110 spac =0.0001
+x.mesh loc =0.120 spac =0.0005
+x.mesh loc =0.135 spac =0.001
+x.mesh loc =0.160 spac =0.001
+#y-meshing
+y.mesh loc =-0.0168 spac =0.001
+y.mesh loc =-0.0158 spac =0.001
+y.mesh loc =-0.0018 spac =0.001
+y.mesh loc =-0.0008 spac =0.001
+y.mesh loc = 0.000  spac =0.0005
+y.mesh loc = 0.010  spac =0.0005
+y.mesh loc = 0.0108 spac =0.001
+y.mesh loc = 0.0118 spac =0.001
+y.mesh loc = 0.0258 spac =0.001
+y.mesh loc = 0.0268 spac =0.001
+#For the region:
+region num = 1 x.min = 0.0 y.min= -0.027 material = Air
+region num = 2 x.min = 0.0 x.max = 0.160 y.min =-0.0008 y.max =0.0 material =sio2
+region num = 3 x.min = 0.110 x.max = 0.135 y.min =-0.0158 y.max =-0.0008 user.material =my_oxide
+region num = 4 x.min = 0.135 x.max = 0.160 y.min =-0.0158 y.max =-0.0008 material = hfo2
+region num = 5 x.min = 0.0 x.max = 0.160 y.min = 0.0 y.max = 0.01  Material = Silicon
+region num = 6 x.min = 0.0 x.max = 0.160 y.min =0.01 y.max =0.0108 material =sio2
+region num = 7 x.min = 0.110 x.max = 0.135 y.min = 0.0108 y.max =0.0258 user.material = my_oxide
+region num = 8 x.min = 0.135 x.max = 0.160 y.min =0.0108 y.max =0.0258 material =hfo2
+#For the electrode:
+electrode name = drain x.min = 0.0 x.max = 0.0 y.min = 0.0 y.max = 0.01 
+electrode name = gate1 x.min = 0.0 x.max = 0.05 y.min =-0.0018 y.max = -0.0008
+electrode name = gate1 x.min = 0.0 x.max = 0.05 y.min = 0.0108 y.max = 0.0118
+electrode name = gate x.min = 0.058 x.max = 0.108 y.min =-0.0018 y.max = -0.0008
+electrode name = gate x.min = 0.058 x.max = 0.108 y.min = 0.0108 y.max = 0.0118
+electrode name = gate2 x.min = 0.110 x.max = 0.160 y.min = -0.0168 y.max = -0.0158
+electrode name = gate2 x.min = 0.110 x.max = 0.160 y.min = 0.0258 y.max = 0.0268
+electrod name = source x.min = 0.16 x.max = 0.16 y.min = 0.0 y.max = 0.01
+#For the quantum tunneling region:
+qtregion number=1 pts.normal=3 pts.tunnel=131 x1=0.09 y1=0.0 x2=0.09 y2=0.01 x3=0.130 y3=0.010  x4=0.130 y4=0.0
+#Dopping
+doping uniform n.type conc=1e15 region=5 x.min =0.0 x.max = 0.16 y.min=0.0 y.max=0.01 
+material material=my_oxide user.group=insulator user.default=oxide permittivity=2.63
+#charge
+#interf qf=1e11 x.min = 0.11 x.max = 0.132 y.min =-0.0005 y.max =0.0005
+#interf qf=1e11 x.min = 0.11 x.max = 0.132 y.min =0.0095 y.max =0.0105
+#For contact:
+contact name = drain workfun=4.3 
+contact name = source workfun=5.5
+contact name = gate1 workfun=4.5
+contact name = gate workfun=4.5
+contact name = gate2 workfun=5.12
+#For the models:
+Models cvt srh fermidirac bbt.nonlocal auger conmob bgn  print temperature=300 
+#Noise(DiffusionNoise(300))
+#output
+output val.band con.band qfn qfp e.field e.mobility h.mobility 
+#medhod
+Method newton trap 
+#solve
+Solve init
+Solve Vgate1 = 0.0 Vstep = 0.04  Vfinal = 1.2 name = gate1
+Solve Vgate2 = 0.0 Vstep = -0.04 Vfinal = -1.2 name = gate2 
+Solve Vsource= 0.0
+Solve Vdrain = 0 Vstep = 0.04 Vfinal = 1.0 name = drain
+log outfile = k263.log 
+Solve Vgate = 0.0 Vstep =0.04 Vfinal =1.2  name = gate
+#Tonyplot ccs1.log
+Save outfile =k263.str
+
+go atlas
+mesh space.mult = 1.0
+#x-meshing
+x.mesh loc =0.00  spac =0.001
+x.mesh loc =0.05  spac =0.001
+x.mesh loc =0.09  spac =0.0005
+x.mesh loc =0.108 spac =0.0001
+x.mesh loc =0.110 spac =0.0001
+x.mesh loc =0.120 spac =0.0005
+x.mesh loc =0.135 spac =0.001
+x.mesh loc =0.160 spac =0.001
+#y-meshing
+y.mesh loc =-0.0168 spac =0.001
+y.mesh loc =-0.0158 spac =0.001
+y.mesh loc =-0.0018 spac =0.001
+y.mesh loc =-0.0008 spac =0.001
+y.mesh loc = 0.000  spac =0.0005
+y.mesh loc = 0.010  spac =0.0005
+y.mesh loc = 0.0108 spac =0.001
+y.mesh loc = 0.0118 spac =0.001
+y.mesh loc = 0.0258 spac =0.001
+y.mesh loc = 0.0268 spac =0.001
+#For the region:
+region num = 1 x.min = 0.0 y.min= -0.027 material = Air
+region num = 2 x.min = 0.0 x.max = 0.160 y.min =-0.0008 y.max =0.0 material =sio2
+region num = 3 x.min = 0.110 x.max = 0.135 y.min =-0.0158 y.max =-0.0008 user.material =my_oxide
+region num = 4 x.min = 0.135 x.max = 0.160 y.min =-0.0158 y.max =-0.0008 material = hfo2
+region num = 5 x.min = 0.0 x.max = 0.160 y.min = 0.0 y.max = 0.01  Material = Silicon
+region num = 6 x.min = 0.0 x.max = 0.160 y.min =0.01 y.max =0.0108 material =sio2
+region num = 7 x.min = 0.110 x.max = 0.135 y.min = 0.0108 y.max =0.0258 user.material = my_oxide
+region num = 8 x.min = 0.135 x.max = 0.160 y.min =0.0108 y.max =0.0258 material =hfo2
+#For the electrode:
+electrode name = drain x.min = 0.0 x.max = 0.0 y.min = 0.0 y.max = 0.01 
+electrode name = gate1 x.min = 0.0 x.max = 0.05 y.min =-0.0018 y.max = -0.0008
+electrode name = gate1 x.min = 0.0 x.max = 0.05 y.min = 0.0108 y.max = 0.0118
+electrode name = gate x.min = 0.058 x.max = 0.108 y.min =-0.0018 y.max = -0.0008
+electrode name = gate x.min = 0.058 x.max = 0.108 y.min = 0.0108 y.max = 0.0118
+electrode name = gate2 x.min = 0.110 x.max = 0.160 y.min = -0.0168 y.max = -0.0158
+electrode name = gate2 x.min = 0.110 x.max = 0.160 y.min = 0.0258 y.max = 0.0268
+electrod name = source x.min = 0.16 x.max = 0.16 y.min = 0.0 y.max = 0.01
+#For the quantum tunneling region:
+qtregion number=1 pts.normal=3 pts.tunnel=131 x1=0.09 y1=0.0 x2=0.09 y2=0.01 x3=0.130 y3=0.010  x4=0.130 y4=0.0
+#Dopping
+doping uniform n.type conc=1e15 region=5 x.min =0.0 x.max = 0.16 y.min=0.0 y.max=0.01 
+material material=my_oxide user.group=insulator user.default=oxide permittivity=4.7
+#charge
+#interf qf=1e11 x.min = 0.11 x.max = 0.132 y.min =-0.0005 y.max =0.0005
+#interf qf=1e11 x.min = 0.11 x.max = 0.132 y.min =0.0095 y.max =0.0105
+#For contact:
+contact name = drain workfun=4.3 
+contact name = source workfun=5.5
+contact name = gate1 workfun=4.5
+contact name = gate workfun=4.5
+contact name = gate2 workfun=5.12
+#For the models:
+Models cvt srh fermidirac bbt.nonlocal auger conmob bgn  print temperature=300 
+#Noise(DiffusionNoise(300))
+#output
+output val.band con.band qfn qfp e.field e.mobility h.mobility 
+#medhod
+Method newton trap 
+#solve
+Solve init
+Solve Vgate1 = 0.0 Vstep = 0.04  Vfinal = 1.2 name = gate1
+Solve Vgate2 = 0.0 Vstep = -0.04 Vfinal = -1.2 name = gate2 
+Solve Vsource= 0.0
+Solve Vdrain = 0 Vstep = 0.04 Vfinal = 1.0 name = drain
+log outfile = k47.log 
+Solve Vgate = 0.0 Vstep =0.04 Vfinal =1.2  name = gate
+#Tonyplot ccs1.log
+Save outfile =k47.str
+
+go atlas
+mesh space.mult = 1.0
+#x-meshing
+x.mesh loc =0.00  spac =0.001
+x.mesh loc =0.05  spac =0.001
+x.mesh loc =0.09  spac =0.0005
+x.mesh loc =0.108 spac =0.0001
+x.mesh loc =0.110 spac =0.0001
+x.mesh loc =0.120 spac =0.0005
+x.mesh loc =0.135 spac =0.001
+x.mesh loc =0.160 spac =0.001
+#y-meshing
+y.mesh loc =-0.0168 spac =0.001
+y.mesh loc =-0.0158 spac =0.001
+y.mesh loc =-0.0018 spac =0.001
+y.mesh loc =-0.0008 spac =0.001
+y.mesh loc = 0.000  spac =0.0005
+y.mesh loc = 0.010  spac =0.0005
+y.mesh loc = 0.0108 spac =0.001
+y.mesh loc = 0.0118 spac =0.001
+y.mesh loc = 0.0258 spac =0.001
+y.mesh loc = 0.0268 spac =0.001
+#For the region:
+region num = 1 x.min = 0.0 y.min= -0.027 material = Air
+region num = 2 x.min = 0.0 x.max = 0.160 y.min =-0.0008 y.max =0.0 material =sio2
+region num = 3 x.min = 0.110 x.max = 0.135 y.min =-0.0158 y.max =-0.0008 user.material =my_oxide
+region num = 4 x.min = 0.135 x.max = 0.160 y.min =-0.0158 y.max =-0.0008 material = hfo2
+region num = 5 x.min = 0.0 x.max = 0.160 y.min = 0.0 y.max = 0.01  Material = Silicon
+region num = 6 x.min = 0.0 x.max = 0.160 y.min =0.01 y.max =0.0108 material =sio2
+region num = 7 x.min = 0.110 x.max = 0.135 y.min = 0.0108 y.max =0.0258 user.material = my_oxide
+region num = 8 x.min = 0.135 x.max = 0.160 y.min =0.0108 y.max =0.0258 material =hfo2
+#For the electrode:
+electrode name = drain x.min = 0.0 x.max = 0.0 y.min = 0.0 y.max = 0.01 
+electrode name = gate1 x.min = 0.0 x.max = 0.05 y.min =-0.0018 y.max = -0.0008
+electrode name = gate1 x.min = 0.0 x.max = 0.05 y.min = 0.0108 y.max = 0.0118
+electrode name = gate x.min = 0.058 x.max = 0.108 y.min =-0.0018 y.max = -0.0008
+electrode name = gate x.min = 0.058 x.max = 0.108 y.min = 0.0108 y.max = 0.0118
+electrode name = gate2 x.min = 0.110 x.max = 0.160 y.min = -0.0168 y.max = -0.0158
+electrode name = gate2 x.min = 0.110 x.max = 0.160 y.min = 0.0258 y.max = 0.0268
+electrod name = source x.min = 0.16 x.max = 0.16 y.min = 0.0 y.max = 0.01
+#For the quantum tunneling region:
+qtregion number=1 pts.normal=3 pts.tunnel=131 x1=0.09 y1=0.0 x2=0.09 y2=0.01 x3=0.130 y3=0.010  x4=0.130 y4=0.0
+#Dopping
+doping uniform n.type conc=1e15 region=5 x.min =0.0 x.max = 0.16 y.min=0.0 y.max=0.01 
+material material=my_oxide user.group=insulator user.default=oxide permittivity=6.3
+#charge
+#interf qf=1e11 x.min = 0.11 x.max = 0.132 y.min =-0.0005 y.max =0.0005
+#interf qf=1e11 x.min = 0.11 x.max = 0.132 y.min =0.0095 y.max =0.0105
+#For contact:
+contact name = drain workfun=4.3 
+contact name = source workfun=5.5
+contact name = gate1 workfun=4.5
+contact name = gate workfun=4.5
+contact name = gate2 workfun=5.12
+#For the models:
+Models cvt srh fermidirac bbt.nonlocal auger conmob bgn  print temperature=300 
+#Noise(DiffusionNoise(300))
+#output
+output val.band con.band qfn qfp e.field e.mobility h.mobility 
+#medhod
+Method newton trap 
+#solve
+Solve init
+Solve Vgate1 = 0.0 Vstep = 0.04  Vfinal = 1.2 name = gate1
+Solve Vgate2 = 0.0 Vstep = -0.04 Vfinal = -1.2 name = gate2 
+Solve Vsource= 0.0
+Solve Vdrain = 0 Vstep = 0.04 Vfinal = 1.0 name = drain
+log outfile = k63.log 
+Solve Vgate = 0.0 Vstep =0.04 Vfinal =1.2  name = gate
+#Tonyplot ccs1.log
+Save outfile =k63.str
+
+go atlas
+mesh space.mult = 1.0
+#x-meshing
+x.mesh loc =0.00  spac =0.001
+x.mesh loc =0.05  spac =0.001
+x.mesh loc =0.09  spac =0.0005
+x.mesh loc =0.108 spac =0.0001
+x.mesh loc =0.110 spac =0.0001
+x.mesh loc =0.120 spac =0.0005
+x.mesh loc =0.135 spac =0.001
+x.mesh loc =0.160 spac =0.001
+#y-meshing
+y.mesh loc =-0.0168 spac =0.001
+y.mesh loc =-0.0158 spac =0.001
+y.mesh loc =-0.0018 spac =0.001
+y.mesh loc =-0.0008 spac =0.001
+y.mesh loc = 0.000  spac =0.0005
+y.mesh loc = 0.010  spac =0.0005
+y.mesh loc = 0.0108 spac =0.001
+y.mesh loc = 0.0118 spac =0.001
+y.mesh loc = 0.0258 spac =0.001
+y.mesh loc = 0.0268 spac =0.001
+#For the region:
+region num = 1 x.min = 0.0 y.min= -0.027 material = Air
+region num = 2 x.min = 0.0 x.max = 0.160 y.min =-0.0008 y.max =0.0 material =sio2
+region num = 3 x.min = 0.110 x.max = 0.135 y.min =-0.0158 y.max =-0.0008 user.material =my_oxide
+region num = 4 x.min = 0.135 x.max = 0.160 y.min =-0.0158 y.max =-0.0008 material = hfo2
+region num = 5 x.min = 0.0 x.max = 0.160 y.min = 0.0 y.max = 0.01  Material = Silicon
+region num = 6 x.min = 0.0 x.max = 0.160 y.min =0.01 y.max =0.0108 material =sio2
+region num = 7 x.min = 0.110 x.max = 0.135 y.min = 0.0108 y.max =0.0258 user.material = my_oxide
+region num = 8 x.min = 0.135 x.max = 0.160 y.min =0.0108 y.max =0.0258 material =hfo2
+#For the electrode:
+electrode name = drain x.min = 0.0 x.max = 0.0 y.min = 0.0 y.max = 0.01 
+electrode name = gate1 x.min = 0.0 x.max = 0.05 y.min =-0.0018 y.max = -0.0008
+electrode name = gate1 x.min = 0.0 x.max = 0.05 y.min = 0.0108 y.max = 0.0118
+electrode name = gate x.min = 0.058 x.max = 0.108 y.min =-0.0018 y.max = -0.0008
+electrode name = gate x.min = 0.058 x.max = 0.108 y.min = 0.0108 y.max = 0.0118
+electrode name = gate2 x.min = 0.110 x.max = 0.160 y.min = -0.0168 y.max = -0.0158
+electrode name = gate2 x.min = 0.110 x.max = 0.160 y.min = 0.0258 y.max = 0.0268
+electrod name = source x.min = 0.16 x.max = 0.16 y.min = 0.0 y.max = 0.01
+#For the quantum tunneling region:
+qtregion number=1 pts.normal=3 pts.tunnel=131 x1=0.09 y1=0.0 x2=0.09 y2=0.01 x3=0.130 y3=0.010  x4=0.130 y4=0.0
+#Dopping
+doping uniform n.type conc=1e15 region=5 x.min =0.0 x.max = 0.16 y.min=0.0 y.max=0.01 
+material material=my_oxide user.group=insulator user.default=oxide permittivity=8
+#charge
+#interf qf=1e11 x.min = 0.11 x.max = 0.132 y.min =-0.0005 y.max =0.0005
+#interf qf=1e11 x.min = 0.11 x.max = 0.132 y.min =0.0095 y.max =0.0105
+#For contact:
+contact name = drain workfun=4.3 
+contact name = source workfun=5.5
+contact name = gate1 workfun=4.5
+contact name = gate workfun=4.5
+contact name = gate2 workfun=5.12
+#For the models:
+Models cvt srh fermidirac bbt.nonlocal auger conmob bgn  print temperature=300 
+#Noise(DiffusionNoise(300))
+#output
+output val.band con.band qfn qfp e.field e.mobility h.mobility 
+#medhod
+Method newton trap 
+#solve
+Solve init
+Solve Vgate1 = 0.0 Vstep = 0.04  Vfinal = 1.2 name = gate1
+Solve Vgate2 = 0.0 Vstep = -0.04 Vfinal = -1.2 name = gate2 
+Solve Vsource= 0.0
+Solve Vdrain = 0 Vstep = 0.04 Vfinal = 1.0 name = drain
+log outfile = k8.log 
+Solve Vgate = 0.0 Vstep =0.04 Vfinal =1.2  name = gate
+#Tonyplot ccs1.log
+Save outfile =k8.str
+
+go atlas
+mesh space.mult = 1.0
+#x-meshing
+x.mesh loc =0.00  spac =0.001
+x.mesh loc =0.05  spac =0.001
+x.mesh loc =0.09  spac =0.0005
+x.mesh loc =0.108 spac =0.0001
+x.mesh loc =0.110 spac =0.0001
+x.mesh loc =0.120 spac =0.0005
+x.mesh loc =0.135 spac =0.001
+x.mesh loc =0.160 spac =0.001
+#y-meshing
+y.mesh loc =-0.0168 spac =0.001
+y.mesh loc =-0.0158 spac =0.001
+y.mesh loc =-0.0018 spac =0.001
+y.mesh loc =-0.0008 spac =0.001
+y.mesh loc = 0.000  spac =0.0005
+y.mesh loc = 0.010  spac =0.0005
+y.mesh loc = 0.0108 spac =0.001
+y.mesh loc = 0.0118 spac =0.001
+y.mesh loc = 0.0258 spac =0.001
+y.mesh loc = 0.0268 spac =0.001
+#For the region:
+region num = 1 x.min = 0.0 y.min= -0.027 material = Air
+region num = 2 x.min = 0.0 x.max = 0.160 y.min =-0.0008 y.max =0.0 material =sio2
+region num = 3 x.min = 0.110 x.max = 0.135 y.min =-0.0158 y.max =-0.0008 user.material =my_oxide
+region num = 4 x.min = 0.135 x.max = 0.160 y.min =-0.0158 y.max =-0.0008 material = hfo2
+region num = 5 x.min = 0.0 x.max = 0.160 y.min = 0.0 y.max = 0.01  Material = Silicon
+region num = 6 x.min = 0.0 x.max = 0.160 y.min =0.01 y.max =0.0108 material =sio2
+region num = 7 x.min = 0.110 x.max = 0.135 y.min = 0.0108 y.max =0.0258 user.material = my_oxide
+region num = 8 x.min = 0.135 x.max = 0.160 y.min =0.0108 y.max =0.0258 material =hfo2
+#For the electrode:
+electrode name = drain x.min = 0.0 x.max = 0.0 y.min = 0.0 y.max = 0.01 
+electrode name = gate1 x.min = 0.0 x.max = 0.05 y.min =-0.0018 y.max = -0.0008
+electrode name = gate1 x.min = 0.0 x.max = 0.05 y.min = 0.0108 y.max = 0.0118
+electrode name = gate x.min = 0.058 x.max = 0.108 y.min =-0.0018 y.max = -0.0008
+electrode name = gate x.min = 0.058 x.max = 0.108 y.min = 0.0108 y.max = 0.0118
+electrode name = gate2 x.min = 0.110 x.max = 0.160 y.min = -0.0168 y.max = -0.0158
+electrode name = gate2 x.min = 0.110 x.max = 0.160 y.min = 0.0258 y.max = 0.0268
+electrod name = source x.min = 0.16 x.max = 0.16 y.min = 0.0 y.max = 0.01
+#For the quantum tunneling region:
+qtregion number=1 pts.normal=3 pts.tunnel=131 x1=0.09 y1=0.0 x2=0.09 y2=0.01 x3=0.130 y3=0.010  x4=0.130 y4=0.0
+#Dopping
+doping uniform n.type conc=1e15 region=5 x.min =0.0 x.max = 0.16 y.min=0.0 y.max=0.01 
+material material=my_oxide user.group=insulator user.default=oxide permittivity=12
+#charge
+#interf qf=1e11 x.min = 0.11 x.max = 0.132 y.min =-0.0005 y.max =0.0005
+#interf qf=1e11 x.min = 0.11 x.max = 0.132 y.min =0.0095 y.max =0.0105
+#For contact:
+contact name = drain workfun=4.3 
+contact name = source workfun=5.5
+contact name = gate1 workfun=4.5
+contact name = gate workfun=4.5
+contact name = gate2 workfun=5.12
+#For the models:
+Models cvt srh fermidirac bbt.nonlocal auger conmob bgn  print temperature=300 
+#Noise(DiffusionNoise(300))
+#output
+output val.band con.band qfn qfp e.field e.mobility h.mobility 
+#medhod
+Method newton trap 
+#solve
+Solve init
+Solve Vgate1 = 0.0 Vstep = 0.04  Vfinal = 1.2 name = gate1
+Solve Vgate2 = 0.0 Vstep = -0.04 Vfinal = -1.2 name = gate2 
+Solve Vsource= 0.0
+Solve Vdrain = 0 Vstep = 0.04 Vfinal = 1.0 name = drain
+log outfile = k12.log 
+Solve Vgate = 0.0 Vstep =0.04 Vfinal =1.2  name = gate
+#Tonyplot ccs1.log
+Save outfile =k12.str
+
+go atlas
+mesh space.mult = 1.0
+#x-meshing
+x.mesh loc =0.00  spac =0.001
+x.mesh loc =0.05  spac =0.001
+x.mesh loc =0.09  spac =0.0005
+x.mesh loc =0.108 spac =0.0001
+x.mesh loc =0.110 spac =0.0001
+x.mesh loc =0.120 spac =0.0005
+x.mesh loc =0.135 spac =0.001
+x.mesh loc =0.160 spac =0.001
+#y-meshing
+y.mesh loc =-0.0168 spac =0.001
+y.mesh loc =-0.0158 spac =0.001
+y.mesh loc =-0.0018 spac =0.001
+y.mesh loc =-0.0008 spac =0.001
+y.mesh loc = 0.000  spac =0.0005
+y.mesh loc = 0.010  spac =0.0005
+y.mesh loc = 0.0108 spac =0.001
+y.mesh loc = 0.0118 spac =0.001
+y.mesh loc = 0.0258 spac =0.001
+y.mesh loc = 0.0268 spac =0.001
+#For the region:
+region num = 1 x.min = 0.0 y.min= -0.027 material = Air
+region num = 2 x.min = 0.0 x.max = 0.160 y.min =-0.0008 y.max =0.0 material =sio2
+region num = 3 x.min = 0.110 x.max = 0.135 y.min =-0.0158 y.max =-0.0008 material =air
+region num = 4 x.min = 0.135 x.max = 0.160 y.min =-0.0158 y.max =-0.0008 material = hfo2
+region num = 5 x.min = 0.0 x.max = 0.160 y.min = 0.0 y.max = 0.01  Material = Silicon
+region num = 6 x.min = 0.0 x.max = 0.160 y.min =0.01 y.max =0.0108 material =sio2
+region num = 7 x.min = 0.110 x.max = 0.135 y.min = 0.0108 y.max =0.0258 material = air
+region num = 8 x.min = 0.135 x.max = 0.160 y.min =0.0108 y.max =0.0258 material =hfo2
+#For the electrode:
+electrode name = drain x.min = 0.0 x.max = 0.0 y.min = 0.0 y.max = 0.01 
+electrode name = gate1 x.min = 0.0 x.max = 0.05 y.min =-0.0018 y.max = -0.0008
+electrode name = gate1 x.min = 0.0 x.max = 0.05 y.min = 0.0108 y.max = 0.0118
+electrode name = gate x.min = 0.058 x.max = 0.108 y.min =-0.0018 y.max = -0.0008
+electrode name = gate x.min = 0.058 x.max = 0.108 y.min = 0.0108 y.max = 0.0118
+electrode name = gate2 x.min = 0.110 x.max = 0.160 y.min = -0.0168 y.max = -0.0158
+electrode name = gate2 x.min = 0.110 x.max = 0.160 y.min = 0.0258 y.max = 0.0268
+electrod name = source x.min = 0.16 x.max = 0.16 y.min = 0.0 y.max = 0.01
+#For the quantum tunneling region:
+qtregion number=1 pts.normal=3 pts.tunnel=131 x1=0.09 y1=0.0 x2=0.09 y2=0.01 x3=0.130 y3=0.010  x4=0.130 y4=0.0
+#Dopping
+doping uniform n.type conc=1e15 region=5 x.min =0.0 x.max = 0.16 y.min=0.0 y.max=0.01 
+material material=my_oxide user.group=insulator user.default=oxide permittivity=12
+#charge
+#interf qf=1e11 x.min = 0.11 x.max = 0.132 y.min =-0.0005 y.max =0.0005
+#interf qf=1e11 x.min = 0.11 x.max = 0.132 y.min =0.0095 y.max =0.0105
+#For contact:
+contact name = drain workfun=4.3 
+contact name = source workfun=5.5
+contact name = gate1 workfun=4.5
+contact name = gate workfun=4.5
+contact name = gate2 workfun=5.12
+#For the models:
+Models cvt srh fermidirac bbt.nonlocal auger conmob bgn  print temperature=300
+
+#output
+output val.band con.band qfn qfp e.field e.mobility h.mobility 
+#medhod
+Method newton trap 
+#solve
+Solve init
+Solve Vgate1 = 0.0 Vstep = 0.04  Vfinal = 1.2 name = gate1
+Solve Vgate2 = 0.0 Vstep = -0.04 Vfinal = -1.2 name = gate2 
+Solve Vsource= 0.0
+Solve Vdrain = 0 Vstep = 0.04 Vfinal = 1.0 name = drain
+log outfile = kair.log 
+Solve Vgate = 0.0 Vstep =0.04 Vfinal =1.2  name = gate
+#Tonyplot ccs2.log
+Save outfile =kair.str
+Tonyplot -overlay k1.log k164.log k263.log k47.log k63.log k8.log k12.log kair.log
+Tonyplot -overlay kair.str k12.str
+
+quit
+
+
